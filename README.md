@@ -1,4 +1,4 @@
-# Petproject-AnotherWorld
-A petproject on unity on the topic of Another World
+# Petproject-MobileGame
+A petproject on Unity 2D on the topic of Educational Visual Novel
 
-A little practice in developing on the unity engine. A random theme from the GameJam theme generator was chosen as the task: Another World
+A little practice in developing on the Unity engine. Objective: a visual novel that teaches information systems and technologies
