@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class QuestionManager : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class QuestionManager : MonoBehaviour
 
     // --- Общие UI Элементы ---
     [Header("Общие UI Элементы")]
-    public Text QuestionTextUI;
+    public TMP_Text QuestionTextUI;
     [Tooltip("Общий объект для управления видимостью вопроса")]
     public GameObject QuestionPanel;
 
@@ -44,7 +45,7 @@ public class QuestionManager : MonoBehaviour
     // ---------------------------------------------
     [Header("--- A) TextInput (Ввод текста) ---")]
     [Tooltip("Поле ввода для ответа игрока")]
-    public InputField TextInputField;
+    public TMP_InputField TextInputField;
     [Tooltip("Кнопка для отправки ответа")]
     public Button TextInputSubmitButton;
     [Tooltip("Правильный ответ (Регистр будет игнорироваться)")]
@@ -78,7 +79,7 @@ public class QuestionManager : MonoBehaviour
     void Awake()
     {
         // Скрываем вопрос по умолчанию. Основной менеджер будет его показывать.
-        QuestionPanel.SetActive(false);
+        //QuestionPanel.SetActive(false);
 
         // Назначаем обработчики (Listener'ы) для удобства
         AssignListeners();
@@ -282,7 +283,7 @@ public class QuestionManager : MonoBehaviour
         // 1. Визуальный фидбек (правильно/неправильно)
         // 2. Вызов метода в вашем общем TestManager'е (например, NextQuestion()), 
         //    передавая ему полученные баллы (FinalPoints).
-
+        HideQuestion();
         Debug.Log("Вопрос отвечен. Итоговые баллы: " + finalPoints);
 
         // Пример вызова внешнего менеджера (вам нужно будет реализовать его)
