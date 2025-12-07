@@ -38,6 +38,10 @@ public class QuestionManager : MonoBehaviour
         get { return finalPoints; }
     }
 
+    public bool IsAnswered
+    {
+        get { return isAnswered; }
+    }
     // --- 3. Типы вопросов и их сериализованные поля ---
 
     // ---------------------------------------------
@@ -78,10 +82,6 @@ public class QuestionManager : MonoBehaviour
 
     void Awake()
     {
-        // Скрываем вопрос по умолчанию. Основной менеджер будет его показывать.
-        //QuestionPanel.SetActive(false);
-
-        // Назначаем обработчики (Listener'ы) для удобства
         AssignListeners();
     }
 
@@ -112,10 +112,7 @@ public class QuestionManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Отображает вопрос и настраивает необходимые UI элементы.
-    /// Этот метод должен вызываться вашим основным скриптом.
-    /// </summary>
+
     public void DisplayQuestion(string questionText)
     {
         if (isAnswered) return;
@@ -123,30 +120,17 @@ public class QuestionManager : MonoBehaviour
         QuestionPanel.SetActive(true);
         QuestionTextUI.text = questionText;
 
-        // Скрываем все контейнеры/кнопки, не относящиеся к текущему типу
-        // (Рекомендуется, чтобы в Unity вы сами настроили дочерние объекты 
-        // так, чтобы они скрывались/показывались вместе с этим скриптом)
-
-        // ВАЖНО: В реальном проекте здесь нужно включать/отключать родительские
-        // объекты для каждого типа вопросов. Здесь мы полагаемся, что вы 
-        // настроите это в Инспекторе через активацию/деактивацию QuestionPanel 
-        // и дочерних контейнеров, связанных с конкретным типом вопроса.
-
         // Дополнительная инициализация для CrossOut
         if (Type == QuestionType.CrossOut)
         {
             selectedCrossOutIndices.Clear();
-            // Сброс визуального состояния кнопок (например, цвета)
             foreach (var button in PropertyButtons)
             {
-                // Пример: button.GetComponent<Image>().color = Color.white;
+                button.GetComponent<Image>().color = Color.white;
             }
         }
     }
 
-    /// <summary>
-    /// Скрывает вопрос.
-    /// </summary>
     public void HideQuestion()
     {
         QuestionPanel.SetActive(false);
@@ -206,10 +190,6 @@ public class QuestionManager : MonoBehaviour
     // В) Вычеркивание лишних свойств (CrossOut)
     // ---------------------------------------------
 
-    /// <summary>
-    /// Переключает состояние 'вычеркнутости' для выбранной кнопки.
-    /// </summary>
-    /// <param name="index">Индекс нажатой кнопки в массиве PropertyButtons.</param>
     private void ToggleCrossOut(int index)
     {
         if (isAnswered || Type != QuestionType.CrossOut) return;
@@ -218,20 +198,17 @@ public class QuestionManager : MonoBehaviour
         {
             selectedCrossOutIndices.Remove(index);
             // Визуальный сброс (например, убрать рамку/цвет)
-            // PropertyButtons[index].GetComponent<Image>().color = Color.white;
+            PropertyButtons[index].GetComponent<Image>().color = Color.white;
         }
         else
         {
             selectedCrossOutIndices.Add(index);
             // Визуальное выделение (например, добавить рамку/цвет)
-            // PropertyButtons[index].GetComponent<Image>().color = Color.red; 
+            PropertyButtons[index].GetComponent<Image>().color = Color.gray; 
         }
         Debug.Log($"CrossOut: Выбрано/Отменено свойство {index}. Текущий выбор: {selectedCrossOutIndices.Count}");
     }
 
-    /// <summary>
-    /// Проверяет ответ на вычеркивание.
-    /// </summary>
     public void CheckCrossOutAnswer()
     {
         if (isAnswered || Type != QuestionType.CrossOut) return;
@@ -274,19 +251,9 @@ public class QuestionManager : MonoBehaviour
 
     // --- 6. Завершение вопроса ---
 
-    /// <summary>
-    /// Вызывается после получения ответа на любой тип вопроса.
-    /// </summary>
     private void OnAnswerSubmitted()
     {
-        // Здесь можно добавить:
-        // 1. Визуальный фидбек (правильно/неправильно)
-        // 2. Вызов метода в вашем общем TestManager'е (например, NextQuestion()), 
-        //    передавая ему полученные баллы (FinalPoints).
         HideQuestion();
         Debug.Log("Вопрос отвечен. Итоговые баллы: " + finalPoints);
-
-        // Пример вызова внешнего менеджера (вам нужно будет реализовать его)
-        // TestManager.Instance.ReceiveAnswerResult(this);
     }
 }

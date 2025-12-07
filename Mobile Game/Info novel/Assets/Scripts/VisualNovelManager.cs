@@ -38,11 +38,18 @@ public class VisualNovelManager : MonoBehaviour
     [SerializeField] private Character[] Characters;
     [Tooltip("Вся ветка диалога для данной сцены")]
     [SerializeField] private DialogueLine[] Dialogue;
+    [SerializeField] private Tutoryash tutor;
 
     // --- Внутренние переменные ---
     private int currentLineIndex = 0;
     private bool isTyping = false;
     private Coroutine typingCoroutine;
+    private bool _isDialogEnded = false;
+
+    public bool IsDialogEnded
+    {
+        get { return _isDialogEnded; }
+    }
 
     private void Start()
     {
@@ -96,7 +103,9 @@ public class VisualNovelManager : MonoBehaviour
         {
             Debug.Log("Диалог завершен.");
             NameText.text = "";
-            DialogueText.text = "КОНЕЦ";
+            DialogueText.text = "";
+            _isDialogEnded = true;
+            tutor.DeactivateAllEmotions();
         }
     }
 
