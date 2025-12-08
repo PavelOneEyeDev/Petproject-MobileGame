@@ -126,6 +126,11 @@ public class ScenePlotManager : MonoBehaviour
             // Плохой исход
             Debug.Log($"Счет {score}/{maxScore} < 50%. Запуск Bad Outcome.");
             finalManager = BadOutcomeVNManager;
+            EndCounter counter = FindObjectOfType<EndCounter>();
+            if (counter != null)
+            {
+                counter.IncrementBadEndingCount();
+            }
         }
         else
         {
