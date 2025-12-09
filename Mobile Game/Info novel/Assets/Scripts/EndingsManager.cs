@@ -116,6 +116,11 @@ public class EndingsManager : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(firstSceneName))
         {
+            EndCounter counter = FindObjectOfType<EndCounter>();
+            if (counter != null)
+            {
+                counter.ResetCounter();
+            }
             SceneManager.LoadScene(firstSceneName);
         }
         else

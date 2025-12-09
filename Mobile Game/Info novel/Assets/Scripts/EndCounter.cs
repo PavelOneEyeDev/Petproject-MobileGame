@@ -31,6 +31,10 @@ public class EndCounter : MonoBehaviour
     public void IncrementBadEndingCount()
     {
         badEndingCount++;
-        Debug.Log($"EndCounter: Счетчик плохих исходов увеличен. Текущее значение: {badEndingCount}");
+    }
+
+    public void ResetCounter()
+    {
+        badEndingCount = 0;
     }
 }
