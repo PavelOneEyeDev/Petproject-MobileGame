@@ -22,7 +22,6 @@ public class VisualNovelManager : MonoBehaviour
         public string TutoryashEmotionKey;
     }
 
-    // --- Публичные поля для Инспектора ---
     [Header("UI Элементы")]
     [Tooltip("Текстовое поле для имени персонажа")]
     [SerializeField] private TMP_Text NameText;
@@ -40,7 +39,6 @@ public class VisualNovelManager : MonoBehaviour
     [SerializeField] private DialogueLine[] Dialogue;
     [SerializeField] private Tutoryash tutor;
 
-    // --- Внутренние переменные ---
     private int currentLineIndex = 0;
     private bool isTyping = false;
     private Coroutine typingCoroutine;

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EndCounter : MonoBehaviour
 {
-    // Статический экземпляр синглтона
     public static EndCounter Instance { get; private set; }
 
     private int badEndingCount = 0;
@@ -14,16 +13,13 @@ public class EndCounter : MonoBehaviour
 
     private void Awake()
     {
-        // Реализация паттерна Синглтон:
         if (Instance == null)
         {
             Instance = this;
-            // Сохраняем объект между сменами сцен
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            // Если экземпляр уже существует, уничтожаем этот новый
             Destroy(gameObject);
         }
     }

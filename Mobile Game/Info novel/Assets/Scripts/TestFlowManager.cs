@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class TestFlowManager : MonoBehaviour
 {
-    // --- 1. Поля для Инспектора ---
-
     [Header("Общие Настройки Теста")]
     [Tooltip("Главная панель UI, содержащая все вопросы. Включается/выключается для начала/конца теста.")]
     public GameObject TestPanel;
@@ -11,8 +9,6 @@ public class TestFlowManager : MonoBehaviour
     [Tooltip("Массив всех объектов вопросов (с прикрепленными QuestionManager)")]
     public QuestionManager[] Questions;
     public string[] QuestionTexts;
-
-    // --- 2. Внутренние переменные ---
 
     private int currentQuestionIndex = 0;
     private int totalScore = 0;
@@ -27,17 +23,6 @@ public class TestFlowManager : MonoBehaviour
         get { return maxPossibleScore; }
     }
 
-    // --- 3. Методы Жизненного Цикла ---
-
-    void Awake()
-    {
-        StartTest();
-        //TestPanel.SetActive(false);
-        //DeactivateAllQuestions();
-    }
-
-    // --- 4. Методы Управления Тестом ---
-
     public void StartTest()
     {
         if (Questions == null || Questions.Length == 0)
@@ -46,17 +31,13 @@ public class TestFlowManager : MonoBehaviour
             return;
         }
 
-        // Сброс и инициализация
         currentQuestionIndex = 0;
         totalScore = 0;
 
-        // Рассчитываем максимальный возможный балл
         CalculateMaxScore();
 
         TestPanel.SetActive(true);
-        //ResultPanel.SetActive(false);
 
-        // Активируем первый вопрос
         LoadQuestion(currentQuestionIndex);
         Debug.Log("Тест запущен.");
     }
@@ -75,8 +56,8 @@ public class TestFlowManager : MonoBehaviour
 
     void Update()
     {
-        if (!TestPanel.activeSelf) return; // Не проверяем, если тест не активен
-        if (currentQuestionIndex >= Questions.Length) return; // Тест завершен
+        if (!TestPanel.activeSelf) return;
+        if (currentQuestionIndex >= Questions.Length) return; 
 
         QuestionManager currentQuestion = Questions[currentQuestionIndex];
 

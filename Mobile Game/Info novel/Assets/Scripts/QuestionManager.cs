@@ -5,13 +5,11 @@ using TMPro;
 
 public class QuestionManager : MonoBehaviour
 {
-    // --- 1. Общие настройки вопроса ---
-
     public enum QuestionType
     {
-        TextInput,      // Ввод ответа с клавиатуры
-        MultipleChoice, // Выбор одного варианта ответа
-        CrossOut        // Вычеркивание лишних свойств (Multiple Unselection)
+        TextInput,      
+        MultipleChoice, 
+        CrossOut        
     }
 
     [Header("Настройки Вопроса")]
@@ -20,19 +18,14 @@ public class QuestionManager : MonoBehaviour
     [Tooltip("Максимальное количество баллов за правильный ответ")]
     public int MaxPoints = 1;
 
-    // --- Общие UI Элементы ---
     [Header("Общие UI Элементы")]
     public TMP_Text QuestionTextUI;
     [Tooltip("Общий объект для управления видимостью вопроса")]
     public GameObject QuestionPanel;
 
-    // --- 2. Переменные для хранения результата ---
     private int finalPoints = 0;
     private bool isAnswered = false;
 
-    /// <summary>
-    /// Геттер для получения заработанных баллов.
-    /// </summary>
     public int FinalPoints
     {
         get { return finalPoints; }
@@ -42,11 +35,7 @@ public class QuestionManager : MonoBehaviour
     {
         get { return isAnswered; }
     }
-    // --- 3. Типы вопросов и их сериализованные поля ---
 
-    // ---------------------------------------------
-    // А) Ввод ответа с клавиатуры (TextInput)
-    // ---------------------------------------------
     [Header("--- A) TextInput (Ввод текста) ---")]
     [Tooltip("Поле ввода для ответа игрока")]
     public TMP_InputField TextInputField;
@@ -55,18 +44,12 @@ public class QuestionManager : MonoBehaviour
     [Tooltip("Правильный ответ (Регистр будет игнорироваться)")]
     public string CorrectTextAnswer;
 
-    // ---------------------------------------------
-    // Б) Выбор варианта ответа (MultipleChoice)
-    // ---------------------------------------------
     [Header("--- B) MultipleChoice (Выбор) ---")]
     [Tooltip("Массив кнопок для вариантов ответа")]
     public Button[] ChoiceButtons;
     [Tooltip("Индекс правильной кнопки в массиве ChoiceButtons (начиная с 0)")]
     public int CorrectChoiceIndex;
 
-    // ---------------------------------------------
-    // В) Вычеркивание лишних свойств (CrossOut)
-    // ---------------------------------------------
     [Header("--- C) CrossOut (Вычеркивание) ---")]
     [Tooltip("Кнопки/Переключатели, которые игрок должен нажать, чтобы 'вычеркнуть' лишнее")]
     public Button[] PropertyButtons;
@@ -75,10 +58,7 @@ public class QuestionManager : MonoBehaviour
     [Tooltip("Кнопка для отправки ответа 'Вычеркивания'")]
     public Button CrossOutSubmitButton;
 
-    // Вспомогательная переменная для отслеживания выбора в CrossOut
     private HashSet<int> selectedCrossOutIndices = new HashSet<int>();
-
-    // --- 4. Методы инициализации ---
 
     void Awake()
     {
@@ -87,20 +67,17 @@ public class QuestionManager : MonoBehaviour
 
     private void AssignListeners()
     {
-        // TextInput
         if (TextInputSubmitButton != null)
         {
             TextInputSubmitButton.onClick.AddListener(CheckTextInputAnswer);
         }
 
-        // MultipleChoice
         for (int i = 0; i < ChoiceButtons.Length; i++)
         {
             int index = i;
             ChoiceButtons[i].onClick.AddListener(() => CheckMultipleChoiceAnswer(index));
         }
 
-        // CrossOut
         for (int i = 0; i < PropertyButtons.Length; i++)
         {
             int index = i;
@@ -120,7 +97,6 @@ public class QuestionManager : MonoBehaviour
         QuestionPanel.SetActive(true);
         QuestionTextUI.text = questionText;
 
-        // Дополнительная инициализация для CrossOut
         if (Type == QuestionType.CrossOut)
         {
             selectedCrossOutIndices.Clear();
@@ -136,11 +112,6 @@ public class QuestionManager : MonoBehaviour
         QuestionPanel.SetActive(false);
     }
 
-    // --- 5. Методы проверки ответа ---
-
-    // ---------------------------------------------
-    // А) Ввод ответа с клавиатуры (TextInput)
-    // ---------------------------------------------
     public void CheckTextInputAnswer()
     {
         if (isAnswered || Type != QuestionType.TextInput) return;
@@ -148,7 +119,6 @@ public class QuestionManager : MonoBehaviour
         string playerAnswer = TextInputField.text.Trim();
         string correctAnswer = CorrectTextAnswer.Trim();
 
-        // Сравнение без учета регистра
         if (string.Equals(playerAnswer, correctAnswer, System.StringComparison.OrdinalIgnoreCase))
         {
             finalPoints = MaxPoints;
@@ -164,9 +134,6 @@ public class QuestionManager : MonoBehaviour
         OnAnswerSubmitted();
     }
 
-    // ---------------------------------------------
-    // Б) Выбор варианта ответа (MultipleChoice)
-    // ---------------------------------------------
     public void CheckMultipleChoiceAnswer(int selectedIndex)
     {
         if (isAnswered || Type != QuestionType.MultipleChoice) return;
@@ -186,10 +153,6 @@ public class QuestionManager : MonoBehaviour
         OnAnswerSubmitted();
     }
 
-    // ---------------------------------------------
-    // В) Вычеркивание лишних свойств (CrossOut)
-    // ---------------------------------------------
-
     private void ToggleCrossOut(int index)
     {
         if (isAnswered || Type != QuestionType.CrossOut) return;
@@ -197,13 +160,11 @@ public class QuestionManager : MonoBehaviour
         if (selectedCrossOutIndices.Contains(index))
         {
             selectedCrossOutIndices.Remove(index);
-            // Визуальный сброс (например, убрать рамку/цвет)
             PropertyButtons[index].GetComponent<Image>().color = Color.white;
         }
         else
         {
             selectedCrossOutIndices.Add(index);
-            // Визуальное выделение (например, добавить рамку/цвет)
             PropertyButtons[index].GetComponent<Image>().color = Color.gray; 
         }
         Debug.Log($"CrossOut: Выбрано/Отменено свойство {index}. Текущий выбор: {selectedCrossOutIndices.Count}");
@@ -213,7 +174,6 @@ public class QuestionManager : MonoBehaviour
     {
         if (isAnswered || Type != QuestionType.CrossOut) return;
 
-        // 1. Проверяем, совпадает ли количество выбранных и правильных элементов
         if (selectedCrossOutIndices.Count != CrossOutIndexes.Count)
         {
             finalPoints = 0;
@@ -223,7 +183,6 @@ public class QuestionManager : MonoBehaviour
             return;
         }
 
-        // 2. Проверяем, совпадают ли все выбранные индексы с правильными
         bool allCorrect = true;
         foreach (int requiredIndex in CrossOutIndexes)
         {
@@ -248,8 +207,6 @@ public class QuestionManager : MonoBehaviour
         isAnswered = true;
         OnAnswerSubmitted();
     }
-
-    // --- 6. Завершение вопроса ---
 
     private void OnAnswerSubmitted()
     {
